@@ -15,6 +15,16 @@
 	<description>Performs an OFAC on individuals and entities.</description>
 	<properties>
 		<java.version>11</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.version>3.x</maven.version>
+		<!-- Dependency versions -->
+		<spring-boot.version>2.4.4</spring-boot.version>
+		<lombok.version>1.18.20</lombok.version>
+		<lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -37,6 +47,22 @@
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
 		</dependency>
+		<!-- BEGIN sentry -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.sentry</groupId>
+			<artifactId>sentry-spring-boot-starter</artifactId>
+			<version>5.4.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.sentry</groupId>
+			<artifactId>sentry-logback</artifactId>
+			<version>5.4.3</version>
+		</dependency>
+		<!-- END sentry -->
 		<!-- JSON -->
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
@@ -56,6 +82,12 @@
 		    <artifactId>fuzzywuzzy</artifactId>
 		    <version>1.2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<!-- lombok dependencies should not end up on classpath -->
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -65,6 +97,107 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.projectlombok</groupId>
+					<artifactId>lombok-maven-plugin</artifactId>
+					<version>${lombok-maven-plugin.version}</version>
+					<executions>
+						<execution>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>delombok</goal>
+							</goals>
+							<configuration>
+								<addOutputDirectory>false</addOutputDirectory>
+								<sourceDirectory>src/main/java</sourceDirectory>
+								<outputDirectory>${project.build.directory}/delombok</outputDirectory>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<annotationProcessorPaths>
+							<path>
+								<groupId>org.springframework.boot</groupId>
+								<artifactId>spring-boot-configuration-processor</artifactId>
+								<version>${spring-boot.version}</version>
+							</path>
+							<!-- For Lombok -->
+							<path>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+								<version>${lombok.version}</version>
+							</path>
+						</annotationProcessorPaths>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${maven-source-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>${maven-clean-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>${maven-enforcer-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>enforce-versions</id>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>enforce-dependencyConvergence</id>
+							<configuration>
+								<rules>
+									<DependencyConvergence />
+								</rules>
+								<fail>false</fail>
+							</configuration>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<rules>
+							<requireMavenVersion>
+								<message>You are running an older version of Maven. This project requires at least Maven
+									${maven.version}
+								</message>
+								<version>[${maven.version},)</version>
+							</requireMavenVersion>
+							<requireJavaVersion>
+								<message>You are running an incompatible version of Java. This project supports JDK 11 to 12.
+								</message>
+								<version>[11,13)</version>
+							</requireJavaVersion>
+						</rules>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	
 	<repositories>
