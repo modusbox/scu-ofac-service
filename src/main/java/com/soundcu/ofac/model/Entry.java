@@ -1,5 +1,6 @@
 package com.soundcu.ofac.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,6 +15,11 @@ public class Entry
 	private List<String> alt_names;
 	private String call_sign;
 	private List<String> citizenships;
+	//This field was ignored because the data is coming in two different formats.
+	//A list of Strings and a String. That causes an exception on the mapping from JSON to Entities.
+	//"dates_of_birth": "1948"
+	//"dates_of_birth": ["1988-08-30"]
+	@JsonIgnore
 	private List<String> dates_of_birth;
 	private String entity_number;
 	private String end_date;
