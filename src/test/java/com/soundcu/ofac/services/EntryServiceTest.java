@@ -1,6 +1,11 @@
 package com.soundcu.ofac.services;
 
 import com.soundcu.ofac.model.Entry;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,11 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -37,6 +37,9 @@ public class EntryServiceTest {
     List<Entry> entries = entryService.search(minimumScore, entityObj);
     logger.info("entries found " + entries.size());
     assertEquals(1, entries.size());
+    Entry entry = entries.get(0);
+    assertEquals(1, entry.getDates_of_birth().size());
+    assertEquals("1988-08-30", entry.getDates_of_birth().get(0));
   }
 
   @Test
@@ -48,6 +51,21 @@ public class EntryServiceTest {
     List<Entry> entries = entryService.search(minimumScore, entityObj);
     logger.info("entries found " + entries.size());
     assertEquals(1, entries.size());
+  }
+
+
+  @Test
+  @SneakyThrows
+  public void testSearchWithNameAndItHasADateBirthAsString(){
+    String entity = "name=Aziz DWEIK";
+    String entityString = this.parseForm(entity);
+    logger.info(entityString);
+    JSONObject entityObj = new JSONObject(entityString);
+    List<Entry> entries = entryService.search(minimumScore, entityObj);
+    assertEquals(1, entries.size());
+    Entry entry = entries.get(0);
+    assertEquals(1, entry.getDates_of_birth().size());
+    assertEquals("1948", entry.getDates_of_birth().get(0));
   }
 
   private String parseForm(String body) throws JSONException {

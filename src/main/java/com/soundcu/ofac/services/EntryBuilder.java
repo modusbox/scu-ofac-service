@@ -44,20 +44,22 @@ public class EntryBuilder {
         .header("Accept", "application/json")
         .build();
     try {
-			logger.info("fetching entries...");
+			logger.info("Starting fetching entries...");
       HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
       if (response.statusCode() != 200) {
         logger.error("error fetching entries. Status code:: " + response.statusCode());
         return;
       }
-
+      logger.info("Finished fetching entries");
+      logger.info("Staring JSON mapping");
       JSONObject entriesObj = new JSONObject(response.body());
       JSONArray array = entriesObj.getJSONArray(RESULTS);
       entries = Arrays.asList(mapper.readValue(array.toString(), Entry[].class));
       array = entriesObj.getJSONArray(SOURCES);
       sources = Arrays.asList(mapper.readValue(array.toString(), SourceMetaData[].class));
-    } catch (InterruptedException | IOException | JSONException e) {
-      e.printStackTrace();
+      logger.info("Finished JSON mapping");
+    } catch (Exception e) {
+      logger.error("Exception#fetchEntries ", e);
     }
   }
 
