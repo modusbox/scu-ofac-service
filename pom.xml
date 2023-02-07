@@ -13,6 +13,12 @@
 	<version>1.0.4-SNAPSHOT</version>
 	<name>ofac</name>
 	<description>Performs an OFAC on individuals and entities.</description>
+	<scm>
+		<connection>scm:git:https://github.com/modusbox/scu-ofac-service.git</connection>
+		<developerConnection>scm:git:https://github.com/modusbox/scu-ofac-service.git</developerConnection>
+		<url>https://github.com/modusbox/scu-ofac-service.git</url>
+		<tag>HEAD</tag>
+	</scm>
 	<properties>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
