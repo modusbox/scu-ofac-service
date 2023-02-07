@@ -85,7 +85,7 @@ jobs:
       - name: Build app image
         id: build-app-image
         run: |
-          docker build -f src/main/docker/Dockerfile.jvm -t $LOCAL_REPOSITORY:$LOCAL_IMAGE_TAG   .
+          docker build -f src/main/docker/Dockerfile -t $LOCAL_REPOSITORY:$LOCAL_IMAGE_TAG   .
 
       - name: Push app image to Amazon ECR for master branch
         id: push-master-images
