@@ -1,0 +1,103 @@
+name: Call a reusable workflow for non master branch
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths-ignore:
+      - '.github/workflows/*.yml'
+
+jobs:
+  reusable-tag-release:
+    env:
+      REGISTRY: 849905330246.dkr.ecr.us-west-2.amazonaws.com
+      LOCAL_REPOSITORY: scu-ofac-service
+      LOCAL_IMAGE_TAG: ci-local
+      APP_ECR_REPOSITORY: choice-custom/scu-ofac-service
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          distribution: 'adopt'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Setup m2 cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Set git email
+        run:  git config --global user.email "githubaction@modusbox.com"
+      - name: Set git name
+        run:  git config --global user.name "modusbox_builder"
+
+      - name: Get current version without snapshot to tag the docker images
+        id: version-to-release
+        run: |
+          export version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | cut -d- -f1)
+          echo "::set-output name=TAG_NAME::$version"
+    
+      - name: Print current version
+        run: echo "Current version to release ${{ steps.version-to-release.outputs.TAG_NAME }}"
+          
+      - name: Set branch tag
+        id: masterVars
+        run: |
+          export TAG_FROM_REF=${GITHUB_REF#refs/*/}
+          IMAGE_TAG=$(echo $TAG_FROM_REF | tr -d v)
+          echo "::set-output name=branch_tag::$IMAGE_TAG"
+      
+      - name: Run tests & package
+        run: TEST_AUTH=true ./mvnw --settings settings.xml -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 -Dspring-boot.run.profiles=test package
+
+      - name: Prepare release to increment pom version and create tag
+        id: mvn-prepare-release
+        env:
+          RELEASE_TAG: ${{ steps.version-to-release.outputs.TAG_NAME  }}
+        run: mvn clean --settings settings.xml -Darguments=-DskipTests --batch-mode -Dtag=$RELEASE_TAG -DignoreSnapshots=true release:prepare
+
+      - name: The prepare-release step has failed
+        if: ${{ failure() && steps.mvn-prepare-release.conclusion == 'failure'}}
+        run: mvn release:rollback
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build app image
+        id: build-app-image
+        run: |
+          docker build -f src/main/docker/Dockerfile.jvm -t $LOCAL_REPOSITORY:$LOCAL_IMAGE_TAG   .
+
+      - name: Push app image to Amazon ECR for master branch
+        id: push-master-images
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          RELEASE_TAG: ${{ steps.version-to-release.outputs.TAG_NAME }}
+          BRANCH_TAG: ${{ steps.masterVars.outputs.branch_tag }}
+
+        run: |
+          aws ecr get-login-password --region us-west-2  | docker login --username AWS --password-stdin $ECR_REGISTRY
+          docker tag $LOCAL_REPOSITORY:$LOCAL_IMAGE_TAG $ECR_REGISTRY/$APP_ECR_REPOSITORY:$RELEASE_TAG
+          docker push $ECR_REGISTRY/$APP_ECR_REPOSITORY:$RELEASE_TAG
+
+      - name: Logout of Amazon ECR
+        if: always()
+        run: docker logout ${{ steps.login-ecr.outputs.registry }}
