@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - 'master'
-    paths-ignore:
-      - '.github/workflows/*.yml'
-
 jobs:
   reusable-tag-release:
     env:
