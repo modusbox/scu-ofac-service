@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.soundcu</groupId>
 	<artifactId>ofac-opensource</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<name>ofac</name>
 	<description>Performs an OFAC on individuals and entities.</description>
 	<properties>

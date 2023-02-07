@@ -1,0 +1,21 @@
+name: Call a reusable workflow for master branch
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths-ignore:
+      - '.github/workflows/*.yml'
+
+jobs:
+  tag-release:
+    uses: modusintegration/action-reusable-workflow/.github/workflows/java-spring-quarkus-app-workflow.yml@master
+    with:
+      project-folder: .
+      registry: 849905330246.dkr.ecr.us-west-2.amazonaws.com
+      localRepository: scu-ofac-service
+      localImageTag: ci-local
+      ecrRepository: choice-custom/scu-ofac-service
+      masterBranch: true
+      flyway: false
+    secrets: inherit
