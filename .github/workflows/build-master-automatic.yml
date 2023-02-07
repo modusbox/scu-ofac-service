@@ -14,6 +14,7 @@ jobs:
       LOCAL_REPOSITORY: scu-ofac-service
       LOCAL_IMAGE_TAG: ci-local
       APP_ECR_REPOSITORY: choice-custom/scu-ofac-service
+      SETTINGS_XML: s3://modusbox-build-cache/zelle-build-settings.xml
 
     runs-on: ubuntu-latest
     defaults:
@@ -35,6 +36,9 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
+
+      - name: Get settings.xml from s3
+        run: aws s3 cp $SETTINGS_XML settings.xml
 
       - name: Setup m2 cache
         uses: actions/cache@v2
