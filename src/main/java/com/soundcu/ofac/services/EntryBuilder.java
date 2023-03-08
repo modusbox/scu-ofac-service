@@ -23,6 +23,7 @@ import java.util.List;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import javax.annotation.PostConstruct;
 
 @Service
 @Slf4j
@@ -40,17 +41,26 @@ public class EntryBuilder {
   private List<Entry> entries;
   private List<SourceMetaData> sources;
 
+  @PostConstruct
+  public void init() {
+      this.fetchEntries();
+  }
+
   /**
    * Fetches the list of entries from https://api.trade.gov/ every hour and builds
    * our model.
    */
-  @Scheduled(fixedRate = 60000 * 60)
+  @Scheduled(fixedRate = 60 * 60 * 1000, initialDelay = 10 * 60 * 1000)
   public void fetchEntries() {
     if ( entries == null ) {
       this.fetchEntries(entriesLocal);
     } else {
       this.fetchEntries(entriesHost);
     }
+  }
+
+  public void fetchEntriesFromLocal() {
+    this.fetchEntries(entriesLocal);
   }
 
   public void fetchEntries(String source) {
@@ -60,7 +70,7 @@ public class EntryBuilder {
           .header("Accept", "application/json")
           .build();
       try {
-        logger.info("Starting fetching entries...");
+        logger.info("Starting fetching entries from " + source);
         HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
         if (response.statusCode() != 200) {
           logger.error("error fetching entries. Status code:: " + response.statusCode());
@@ -99,14 +109,12 @@ public class EntryBuilder {
   public synchronized List<Entry> getEntries() {
     if (entries == null)
       fetchEntries();
-
     return entries;
   }
 
   public List<SourceMetaData> getSourceData() {
     if (sources == null)
       fetchEntries();
-
     return sources;
   }
 }
