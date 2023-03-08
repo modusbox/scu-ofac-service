@@ -9,6 +9,8 @@ A new and improved OFAC search running as Spring service.
 
  * The source data is checked for updates and reloaded hourly
 
+ * Initially data is loaded locally; this helps bootstrap and also running locally on a docker-compose setup
+
 ### Show Me What You Got!
 
 [Sound OFAC Service Swagger](https://app.swaggerhub.com/apis/SoundCU/Sound_OFAC_Service)
