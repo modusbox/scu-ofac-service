@@ -67,8 +67,8 @@ public class ErrorController extends ResponseEntityExceptionHandler
 	
 	/**
 	 * Catches errors specifically thrown by the OFAC service to indicate an error
-	 * @param e
-	 * @return ResponseEntity<Object>
+	 * @param e Exception
+	 * @return ResponseEntity
 	 */
 	@ExceptionHandler(ServiceException.class)
 	public ResponseEntity<Object> handleServiceException(ServiceException e)
@@ -92,8 +92,8 @@ public class ErrorController extends ResponseEntityExceptionHandler
 
 	/**
 	 * Catches any unexpected errors.
-	 * @param e
-	 * @return ResponseEntity<Object>
+	 * @param e Exception
+	 * @return ResponseEntity
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleUnknownException(Exception e)

@@ -30,10 +30,10 @@ public class EntryService {
   /**
    * Filters our search results based on type (entity, individual, or vessel).
    *
-   * @param minimumScore
-   * @param entity
-   * @param type
-   * @return List<Entry>
+   * @param minimumScore score
+   * @param entity entity
+   * @param type type
+   * @return List
    */
   public List<Entry> filterByType(int minimumScore, JSONObject entity, String type) {
     return search(minimumScore, entity).stream().filter((entry) ->
@@ -180,9 +180,9 @@ public class EntryService {
    * Searches the list for a fuzzy name match above the given threshold or an exact match
    * on secondary fields (address, birth date, or ID number).
    *
-   * @param minimumScore
-   * @param entity
-   * @return List<Entry>
+   * @param minimumScore score
+   * @param entity entity
+   * @return List list
    */
   public List<Entry> search(int minimumScore, JSONObject entity) {
     List<Entry> entries = entryBuilder.getEntries();
