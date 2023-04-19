@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'master'
+      - 'vul-tests'
 jobs:
   reusable-tag-release:
     env:
