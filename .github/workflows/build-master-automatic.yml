@@ -11,7 +11,7 @@ jobs:
       LOCAL_REPOSITORY: scu-ofac-service
       LOCAL_IMAGE_TAG: ci-local
       APP_ECR_REPOSITORY: choice/scu-ofac-service
-      SETTINGS_XML: s3://modusbox-build-cache/zelle-build-settings.xml
+      SETTINGS_XML: s3://portx-choice-ci/settings.xml
 
     runs-on: ubuntu-latest
     defaults:
