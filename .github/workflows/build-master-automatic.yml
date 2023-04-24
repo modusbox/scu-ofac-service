@@ -1,4 +1,4 @@
-name: Call a reusable workflow for non master branch
+name: Call a reusable workflow for master branch
 
 on:
   push:
@@ -7,11 +7,11 @@ on:
 jobs:
   reusable-tag-release:
     env:
-      REGISTRY: 849905330246.dkr.ecr.us-west-2.amazonaws.com
+      REGISTRY: 854173534877.dkr.ecr.us-west-2.amazonaws.com
       LOCAL_REPOSITORY: scu-ofac-service
       LOCAL_IMAGE_TAG: ci-local
-      APP_ECR_REPOSITORY: choice-custom/scu-ofac-service
-      SETTINGS_XML: s3://modusbox-build-cache/zelle-build-settings.xml
+      APP_ECR_REPOSITORY: choice/scu-ofac-service
+      SETTINGS_XML: s3://portx-choice-ci/settings.xml
 
     runs-on: ubuntu-latest
     defaults:
@@ -30,8 +30,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PORTX_TENANT_1 }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PORTX_TENANT_1 }}
           aws-region: us-west-2
 
       - name: Get settings.xml from s3
