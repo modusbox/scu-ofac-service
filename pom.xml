@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.soundcu</groupId>
 	<artifactId>ofac-opensource</artifactId>
-	<version>1.0.21-SNAPSHOT</version>
+	<version>1.0.22-SNAPSHOT</version>
 	<name>ofac</name>
 	<description>Performs an OFAC on individuals and entities.</description>
 	<scm>
@@ -32,6 +32,7 @@
 		<lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
 		<snakeyaml.version>2.0</snakeyaml.version>
 		<spring-expression.version>5.3.27</spring-expression.version>
+		<spring-framework.version>5.3.27</spring-framework.version>
 	</properties>
 
 	<dependencies>
