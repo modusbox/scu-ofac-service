@@ -17,5 +17,5 @@ A new and improved OFAC search running as Spring service.
 
 ### Where Have All My Logs Gone?
 
-All logs are directed to stdout/stderr
+All logs are directed to stdout/stderr 
 
