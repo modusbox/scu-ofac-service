@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.10</version>
+		<version>3.0.6</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.soundcu</groupId>
@@ -19,7 +19,7 @@
 		<tag>ofac-opensource-1.0.7</tag>
 	</scm>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
@@ -27,7 +27,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.version>3.x</maven.version>
 		<!-- Dependency versions -->
-		<spring-boot.version>2.7.10</spring-boot.version>
+		<spring-boot.version>3.0.6</spring-boot.version>
 		<lombok.version>1.18.20</lombok.version>
 		<lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
 		<snakeyaml.version>2.0</snakeyaml.version>

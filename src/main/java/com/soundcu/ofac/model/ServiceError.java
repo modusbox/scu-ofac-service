@@ -2,19 +2,18 @@ package com.soundcu.ofac.model;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.TimeZone;
-
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import java.time.OffsetDateTime;
 
 public class ServiceError
 {
 	private int code;
-	private HttpStatus status;
+	private HttpStatusCode status;
 	private String message;
 	
-	public ServiceError(int code, HttpStatus status, String message)
+	public ServiceError(int code, HttpStatusCode status, String message)
 	{
 		this.code = code;
 		this.status = status;

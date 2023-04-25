@@ -1,8 +1,11 @@
 package com.soundcu.ofac;
 
+import com.soundcu.ofac.exceptions.ServiceException;
+import com.soundcu.ofac.model.ServiceError;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -13,13 +16,10 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.soundcu.ofac.exceptions.ServiceException;
-import com.soundcu.ofac.model.ServiceError;
-
 @ControllerAdvice
 public class ErrorController extends ResponseEntityExceptionHandler
 {
-	private ResponseEntity<Object> handleError(int code, HttpStatus status, String message)
+	private ResponseEntity<Object> handleError(int code, HttpStatusCode status, String message)
 	{
 		ServiceError error = new ServiceError(code, status, message);
 		return new ResponseEntity<Object>(error, status);
@@ -31,7 +31,7 @@ public class ErrorController extends ResponseEntityExceptionHandler
 	@Override
 	protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
             HttpHeaders headers,
-            HttpStatus status,
+            HttpStatusCode status,
             WebRequest request)
 	{
 		return handleError(141, HttpStatus.UNSUPPORTED_MEDIA_TYPE, ex.getMessage());
@@ -44,7 +44,7 @@ public class ErrorController extends ResponseEntityExceptionHandler
 	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
 			HttpRequestMethodNotSupportedException e,
 			HttpHeaders headers,
-			HttpStatus status,
+			HttpStatusCode status,
 			WebRequest request)
 	{
 		ServletWebRequest servletRequest = (ServletWebRequest) request;
@@ -59,7 +59,7 @@ public class ErrorController extends ResponseEntityExceptionHandler
 	@Override
 	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
             HttpHeaders headers,
-            HttpStatus status,
+            HttpStatusCode status,
             WebRequest request)
 	{
 		return handleError(132, HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -83,7 +83,7 @@ public class ErrorController extends ResponseEntityExceptionHandler
 	protected ResponseEntity<Object> handleServletRequestBindingException(
 			final ServletRequestBindingException ex,
 	        final HttpHeaders headers,
-	        final HttpStatus status,
+	        final HttpStatusCode status,
 	        final WebRequest request
 	    )
 	{
