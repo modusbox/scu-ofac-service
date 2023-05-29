@@ -3,7 +3,7 @@ name: Call a reusable workflow for master branch
 on:
   push:
     branches:
-      - 'CBIS-1964'
+      - 'master'
 jobs:
   reusable-tag-release:
     env:
