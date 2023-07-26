@@ -8,7 +8,7 @@ class OfacApplicationTests
 {
 	@Test
 	void contextLoads() 
-	{ 
+	{
 		
 	}
 }
