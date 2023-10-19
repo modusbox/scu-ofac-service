@@ -1,10 +1,10 @@
 package com.soundcu.ofac.model;
 
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
@@ -14,6 +14,12 @@ public class Entry
 	private List<String> alt_names;
 	private String call_sign;
 	private List<String> citizenships;
+	//This data is coming in two different formats.
+	//A list of Strings and a String. That causes an exception on the mapping from JSON to Entities.
+	//So it is a String, it will convert a list of one element.
+	//"dates_of_birth": "1948"
+	//"dates_of_birth": ["1988-08-30"]
+	@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
 	private List<String> dates_of_birth;
 	private String entity_number;
 	private String end_date;

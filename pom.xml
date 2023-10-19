@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>2.7.12</version>
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.soundcu</groupId>
 	<artifactId>ofac-opensource</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.25-SNAPSHOT</version>
 	<name>ofac</name>
 	<description>Performs an OFAC on individuals and entities.</description>
+	<scm>
+		<connection>scm:git:https://github.com/modusbox/scu-ofac-service.git</connection>
+		<developerConnection>scm:git:https://github.com/modusbox/scu-ofac-service.git</developerConnection>
+		<url>https://github.com/modusbox/scu-ofac-service.git</url>
+		<tag>ofac-opensource-1.0.7</tag>
+	</scm>
 	<properties>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,9 +27,12 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.version>3.x</maven.version>
 		<!-- Dependency versions -->
-		<spring-boot.version>2.4.4</spring-boot.version>
+		<spring-boot.version>2.7.12</spring-boot.version>
 		<lombok.version>1.18.20</lombok.version>
 		<lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
+		<snakeyaml.version>2.0</snakeyaml.version>
+		<spring-expression.version>5.3.27</spring-expression.version>
+		<spring-framework.version>5.3.27</spring-framework.version>
 	</properties>
 
 	<dependencies>
@@ -68,7 +76,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20210307</version>
+			<version>20230227</version>
 		</dependency>
 		<!-- JSON Schema Validation -->
 		<!-- https://github.com/everit-org/json-schema -->
@@ -89,6 +97,21 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>${snakeyaml.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-expression</artifactId>
+				<version>${spring-expression.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

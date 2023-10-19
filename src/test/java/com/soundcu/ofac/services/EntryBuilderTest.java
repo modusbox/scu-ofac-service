@@ -22,7 +22,7 @@ public class EntryBuilderTest {
 
   @Test
   void fetchEntriesTest() {
-    entryBuilder.fetchEntries();
+    entryBuilder.fetchEntriesFromLocal();
     waitForEntriesLoaded(100, 1);
   }
 
