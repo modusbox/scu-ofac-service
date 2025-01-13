@@ -166,14 +166,16 @@ public class EntryService {
         if (!(entity.has(ID) || entity.has(TAX_ID)) || entry.getIds() == null)
             return false;
 
-        String entityId = entity.has(ID) ? entity.getString(ID) : null;
-        String taxId = entity.has(TAX_ID) ? entity.getString(TAX_ID) : null;
+        String entityId = entity.has(ID) ? entity.getString(ID).replaceAll("[^a-zA-Z0-9]", "") : null;
+        String taxId = entity.has(TAX_ID) ? entity.getString(TAX_ID).replaceAll("[^a-zA-Z0-9]", "") : null;
+        
         return entry.getIds().stream().anyMatch((id) ->
         {
             if (id.getNumber() == null)
                 return false;
 
-            return id.getNumber().equalsIgnoreCase(entityId) || id.getNumber().equalsIgnoreCase(taxId);
+            String idNumber = id.getNumber().replaceAll("[^a-zA-Z0-9]", "");
+            return idNumber.equalsIgnoreCase(entityId) || idNumber.equalsIgnoreCase(taxId);
         });
     }
 
