@@ -168,7 +168,7 @@ public class EntryService {
 
         String entityId = entity.has(ID) ? entity.getString(ID).replaceAll("[^a-zA-Z0-9]", "") : null;
         String taxId = entity.has(TAX_ID) ? entity.getString(TAX_ID).replaceAll("[^a-zA-Z0-9]", "") : null;
-        
+
         return entry.getIds().stream().anyMatch((id) ->
         {
             if (id.getNumber() == null)
