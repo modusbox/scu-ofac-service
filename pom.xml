@@ -27,8 +27,8 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.version>3.x</maven.version>
 		<!-- Dependency versions -->
-		<spring-boot.version>2.7.12</spring-boot.version>
-		<lombok.version>1.18.20</lombok.version>
+		<spring-boot.version>3.2.4</spring-boot.version>
+		<lombok.version>1.18.30</lombok.version>
 		<lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
 		<snakeyaml.version>2.0</snakeyaml.version>
 		<spring-expression.version>5.3.27</spring-expression.version>

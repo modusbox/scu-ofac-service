@@ -95,7 +95,7 @@ public class Controller
 	
 	private Response buildResponse(List<Entry> entries, JSONObject entity, String userId, String userType)
 	{
-		Response response = new Response(entries, entity.getString("name"));
+		Response response = new Response(entries, entity.has("name") ? entity.getString("name") : "");
 		Requestor requestor = new Requestor();
 		requestor.setUser_id(userId);
 		requestor.setUser_id_type(userType);
