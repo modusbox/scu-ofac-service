@@ -7,6 +7,6 @@
 # EXPOSE 8080
 # ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 
-FROM 854173534877.dkr.ecr.us-west-2.amazonaws.com/portx-payments/base-java:springboot-2-jdk11
+FROM 854173534877.dkr.ecr.us-west-2.amazonaws.com/portx-payments/base-java:springboot-2-jdk17
 
 COPY --chown=1001 target/ofac-opensource*.jar /deployments/
