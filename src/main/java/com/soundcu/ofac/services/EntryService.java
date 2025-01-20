@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -203,15 +204,28 @@ public class EntryService {
                     entry.setScore(score);
                     scoreMatch = true;
                 } else {
-                    List<String> altNames = entry.getAlt_names();
-                    int i = 0;
-                    while (altNames != null && !scoreMatch && i < altNames.size()) {
-                        score = FuzzySearch.tokenSortRatio(altNames.get(i), entity.getString(NAME));
+                    List<String> names = Arrays.asList(entry.getName().split(","));
+                    int j = 0;
+                    while(names != null && !scoreMatch && j < names.size()) {
+                        score = FuzzySearch.tokenSortRatio(names.get(j), entity.getString(NAME));
                         if (score >= minimumScore) {
                             entry.setScore(score);
                             scoreMatch = true;
                         }
-                        i++;
+                        j++;
+                    }
+                                        
+                    if (scoreMatch == false) {
+                        List<String> altNames = entry.getAlt_names();
+                        int i = 0;
+                        while (altNames != null && !scoreMatch && i < altNames.size()) {
+                            score = FuzzySearch.tokenSortRatio(altNames.get(i), entity.getString(NAME));
+                            if (score >= minimumScore) {
+                                entry.setScore(score);
+                                scoreMatch = true;
+                            }
+                            i++;
+                        }
                     }
                 }
             }
