@@ -9,14 +9,14 @@
 	</parent>
 	<groupId>com.soundcu</groupId>
 	<artifactId>ofac-opensource</artifactId>
-	<version>1.0.28</version>
+	<version>1.0.29-SNAPSHOT</version>
 	<name>ofac</name>
 	<description>Performs an OFAC on individuals and entities.</description>
 	<scm>
 		<connection>scm:git:https://github.com/modusbox/scu-ofac-service.git</connection>
 		<developerConnection>scm:git:https://github.com/modusbox/scu-ofac-service.git</developerConnection>
 		<url>https://github.com/modusbox/scu-ofac-service.git</url>
-		<tag>1.0.28</tag>
+		<tag>ofac-opensource-1.0.7</tag>
 	</scm>
 	<properties>
 		<java.version>17</java.version>
