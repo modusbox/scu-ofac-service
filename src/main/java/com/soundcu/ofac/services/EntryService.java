@@ -204,22 +204,18 @@ public class EntryService {
                     entry.setScore(score);
                     scoreMatch = true;
                 } else {
-                    List<String> names = Arrays.asList(entry.getName().split(","));
-                    int j = 0;
-                    while(names != null && !scoreMatch && j < names.size()) {
-                        score = FuzzySearch.tokenSortRatio(names.get(j), entity.getString(NAME));
-                        if (score >= minimumScore) {
-                            entry.setScore(score);
-                            scoreMatch = true;
-                        }
-                        j++;
+                    score = tokensScore(entity.getString(NAME), entry.getName(), minimumScore);
+
+                    if (score >= minimumScore) {
+                        entry.setScore(score);
+                        scoreMatch = true;
                     }
-                                        
+
                     if (scoreMatch == false) {
                         List<String> altNames = entry.getAlt_names();
                         int i = 0;
                         while (altNames != null && !scoreMatch && i < altNames.size()) {
-                            score = FuzzySearch.tokenSortRatio(altNames.get(i), entity.getString(NAME));
+                            score = tokensScore(entity.getString(NAME), altNames.get(i), minimumScore);
                             if (score >= minimumScore) {
                                 entry.setScore(score);
                                 scoreMatch = true;
@@ -231,5 +227,48 @@ public class EntryService {
             }
             return scoreMatch || isMatch(entry, entity);
         }).collect(Collectors.toList());
+    }
+
+    private int tokensScore(String name, String entryName, int minimumScore) {
+        List<String> names = Arrays.asList(name.split("[,\\s\\.]"));//split by space, comma, dashes
+        List<String> entryNames = Arrays.asList(entryName.split("[,\\s\\.]"));//split by space, comma, dashes
+
+        int j = 0;
+        int score = -1;
+        boolean scoreBelowMin = false;
+
+        if (entryNames.size() < 1)
+            return 0;
+
+        //Iterate over all tokens in the name and make sure their individual scores exceed minimum score
+        while(!scoreBelowMin && j < names.size()) {
+            String nextToken = names.get(j);
+
+            int e = 0;
+            int entityTokenScore = 0;
+            boolean found = false;
+
+            while (e < entryNames.size() && !found) {
+                String nextEntryToken = entryNames.get(e);
+                entityTokenScore = FuzzySearch.tokenSortRatio(nextToken, nextEntryToken);
+                if (entityTokenScore >= minimumScore) {
+                   found = true;
+                }
+                e++;
+            }
+
+            if (!found) { //Fail the loop here
+                scoreBelowMin = true;
+                score = -1;
+            } else {
+                if (entityTokenScore <= score || score == -1) {
+                    score = entityTokenScore;
+                }
+            }
+
+            j++;
+        }
+
+        return score;
     }
 }
