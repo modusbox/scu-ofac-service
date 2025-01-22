@@ -236,6 +236,8 @@ public class EntryService {
         int j = 0;
         int score = -1;
         boolean scoreBelowMin = false;
+        int totalWeightedScore = 0;
+        int totalLength = 0;
 
         if (entryNames.size() < 1)
             return 0;
@@ -251,8 +253,10 @@ public class EntryService {
             while (e < entryNames.size() && !found) {
                 String nextEntryToken = entryNames.get(e);
                 entityTokenScore = FuzzySearch.tokenSortRatio(nextToken, nextEntryToken);
-                if (entityTokenScore >= minimumScore) {
+                if (entityTokenScore >= 66) {
                    found = true;
+                   totalWeightedScore += entityTokenScore * nextEntryToken.length();
+                   totalLength += nextEntryToken.length();
                 }
                 e++;
             }
@@ -260,13 +264,15 @@ public class EntryService {
             if (!found) { //Fail the loop here
                 scoreBelowMin = true;
                 score = -1;
-            } else {
-                if (entityTokenScore <= score || score == -1) {
-                    score = entityTokenScore;
-                }
             }
 
             j++;
+        }
+        
+        if (!scoreBelowMin && totalLength > 0 ) {
+            score = totalWeightedScore/totalLength;
+        } else {
+            score = -1;
         }
 
         return score;
